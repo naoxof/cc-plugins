@@ -5,7 +5,7 @@
   },
   "plugins": [
     {
-      "name": "templt",
+      "name": "tmplt",
       "source": "./tmplt",
       "description": "Template based documet creator"
     }
