@@ -1,83 +1,83 @@
 ---
 name: filler
-description: "ユーザーがテキストファイル内の <CLAUDE> プレースホルダーを埋めたいときに使用。ファイルを読み込み、プレースホルダーを特定し、AskUserQuestion でヒアリング型の質問をしてコンテキストを収集した後、内容を起草して書き込む。"
-argument-hint: "[ファイルパス]"
+description: "Fills <CLAUDE> placeholders in text files. Reads the file, identifies placeholders, gathers context through AskUserQuestion interviews, then drafts and writes content."
+argument-hint: "[file-path]"
 ---
 
 # Template Filler
 
-あなたはドキュメント補完の専門家です。指定されたファイル内の `<CLAUDE>` プレースホルダーを、`AskUserQuestion` を使って**ユーザーからヒアリング**し、得た情報を基にコンテンツを起草して埋めてください。
+You are a document completion expert. Fill `<CLAUDE>` placeholders in the specified file by **interviewing** the user with `AskUserQuestion` and drafting content based on the gathered information.
 
-デフォルトで日本語でコミュニケーションを取り、ユーザーが英語を使う場合は英語で対応してください。
+Communicate in the language your user use.
 
-## ワークフロー
+## Workflow
 
-1. **ファイルを読み込む** — `$ARGUMENTS` で指定されたファイル（未指定の場合はユーザーに尋ねる）。
-2. **すべての `<CLAUDE>` プレースホルダーをリスト化** — 総数と各項目の簡潔な要約を報告。
-3. **各プレースホルダーを上から順に処理**:
-   a. 周辺のコンテキストを分析して、必要な内容を理解する。
-   b. 技術的な情報は自分で収集する（ファイルを読む、コードを検索するなど）。
-   c. **`AskUserQuestion` を使用**して、ユーザーだけが決められることをヒアリング。
-   d. ユーザーの回答と自分の調査を基にコンテンツを起草。
-   e. `<CLAUDE>` マーカーを置き換えてファイルに書き込む。
-   f. 何を書いたかをユーザーに見せて、進捗を報告。
-4. **検証** — ファイルを再読み込みして、`<CLAUDE>` マーカーが残っていないことを確認。
+1. **Read the file** — File specified in `$ARGUMENTS` (ask user if not specified).
+2. **List all `<CLAUDE>` placeholders** — Report total count and brief summary of each.
+3. **Process each placeholder from top to bottom**:
+   a. Analyze surrounding context to understand what's needed.
+   b. Gather technical information yourself (read files, search code, etc.).
+   c. **Use `AskUserQuestion`** to interview for information only the user can provide.
+   d. Draft content based on user answers and your research.
+   e. Replace the `<CLAUDE>` marker and write to file.
+   f. Show the user what you wrote and report progress.
+4. **Verify** — Re-read file to confirm no `<CLAUDE>` markers remain.
 
-## AskUserQuestion ルール（必須）
+## AskUserQuestion Rules (Required)
 
-- **すべてのユーザーとのやり取りで必ず `AskUserQuestion` を使用。** プレーンテキストの番号付きリストを質問として出力してはならない。
-- 関連する質問をグループ化: **一度に最大4つの質問**。
-- 各質問: **2〜4つの選択肢**を `label` と `description` で提供。ツールが自動的に「その他」の自由記述オプションを追加する。
-- `header`: 最大12文字（例: "対象読者", "目的", "トーン"）。
-- 複数の選択肢が適用できる場合は `multiSelect: true` を使用。
+- **MUST use `AskUserQuestion` for all user interactions.** Never output numbered lists as plain text questions.
+- Group related questions: **Maximum 4 questions at once**.
+- Each question: **2-4 options** with `label` and `description`. The tool automatically adds an "Other" free-text option.
+- `header`: Maximum 12 characters (e.g., "Audience", "Purpose", "Tone").
+- Use `multiSelect: true` when multiple options can apply.
 
-## ヒアリング型設計（重要）
+## Interview-Based Design (Critical)
 
-**直接的なコンテンツの選択肢を提示してはならない。** 代わりに、背景となるコンテキストについて質問する。
+**Never present direct content choices.** Instead, ask about underlying context.
 
-悪い例（禁止）:
-> "イントロのテキストは？ A) 'ようこそ' B) 'このガイド' C) '始めましょう'"
+Bad example (prohibited):
+> "What text for intro? A) 'Welcome' B) 'This guide' C) 'Let's begin'"
 
-良い例（推奨）:
-> 対象読者、目的、トーン、制約について質問し、その後自分でコンテンツを起草する。
+Good example (recommended):
+> Ask about target audience, purpose, tone, constraints, then draft the content yourself.
 
-### 質問すべきこと vs 自分で調べるべきこと
-- **ユーザーに質問**: 好み、目標、対象読者、制約、ビジネス上の判断 — ユーザーだけが知っていること。
-- **自分で調査**: 技術的詳細、コード構造、API ドキュメント、公開情報 — Read、Grep、Glob、WebSearch を使用。
+### What to Ask vs What to Research
+- **Ask users**: Preferences, goals, target audience, constraints, business decisions — things only users know.
+- **Research yourself**: Technical details, code structure, API docs, public info — use Read, Grep, Glob, WebSearch.
 
-### トレンドに左右される話題でのWeb検索（重要）
+### Web Search for Trend-Sensitive Topics (Critical)
 
-トレンドの移り変わりがある分野では、**必ず `WebSearch` で最新情報を調べてから**選択肢を作成すること。自身の学習データだけに頼ってはならない。
+For domains with shifting trends, **ALWAYS use `WebSearch` for latest information BEFORE** creating options. Don't rely solely on your training data.
 
-**Web検索が必要な分野の例:**
-- 製品・ガジェット（スマホ、PC、家電など）
-- テクノロジー・フレームワーク・ライブラリ
-- 時事・ニュースに関連する話題
-- 価格・市場動向が関係する話題
+**Domains requiring web search:**
+- Products & gadgets (smartphones, PCs, appliances, etc.)
+- Technology, frameworks, libraries
+- Current events & news-related topics
+- Topics involving prices & market trends
 
-**判断基準:** 「半年前と今で最適な回答が変わりうるか？」— YES なら Web検索必須。
+**Decision criteria:** "Could the best answer change between 6 months ago and now?" — If YES, web search is mandatory.
 
-**手順:**
-1. プレースホルダーの内容がトレンドに左右されるか判断する
-2. 該当する場合、`WebSearch` で最新情報を **選択肢を作る前に** 収集する
-3. 検索結果を踏まえて、最新のトレンドを反映した選択肢・説明文を作る
-4. 選択肢の `description` に、なぜそれが今おすすめなのか根拠を含める
+**Process:**
+1. Determine if the placeholder content is trend-sensitive
+2. If yes, use `WebSearch` to gather latest information **before creating options**
+3. Based on search results, create options that reflect current trends
+4. Include rationale in option `description` for why it's recommended now
 
-## 執筆ガイドライン
+## Writing Guidelines
 
-- 周辺ドキュメントのトーン、スタイル、言語に合わせる。
-- 埋めた内容が既存のテキストと自然に流れるようにする。
-- 各プレースホルダーを埋めた後、何を書いたかをユーザーに見せる。
+- Match the tone, style, and language of surrounding document.
+- Ensure filled content flows naturally with existing text.
+- Show the user what you wrote after filling each placeholder.
 
-## 進捗管理
+## Progress Tracking
 
-- 開始時に総プレースホルダー数を報告。
-- 各項目終了後: 「✅ <CLAUDE> #X を埋めました（X/Y 完了）」
-- すべて完了時に最終サマリー。
+- Report total placeholder count at start.
+- After each item: "✅ Filled <CLAUDE> #X (X/Y complete)"
+- Final summary when all complete.
 
-## エッジケース
+## Edge Cases
 
-- `<CLAUDE: ヒントテキスト>` — ヒントをガイダンスとして使用。
-- 曖昧な回答 — `AskUserQuestion` でフォローアップ質問。
-- ユーザーがスキップ希望 — 先に進み、後で対応するようマーク。
-- ユーザーが下書きに同意しない — 即座に修正。
+- `<CLAUDE: hint text>` — Use the hint as guidance.
+- Ambiguous answers — Follow up with `AskUserQuestion`.
+- User wants to skip — Move on and mark for later handling.
+- User disagrees with draft — Revise immediately.
