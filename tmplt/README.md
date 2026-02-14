@@ -16,6 +16,7 @@ Markdownファイル内の`<CLAUDE>`プレースホルダーをインタラク�
 
 Markdownファイルに`<CLAUDE>`プレースホルダーを配置:
 
+proposal.md
 ```markdown
 # プロジェクト提案書
 
@@ -38,7 +39,7 @@ fillerスキルを実行:
 /tmplt:filler proposal.md
 ```
 
-処理フロー:
+claude code内の処理フロー:
 1. 周辺コンテキストの分析
 2. 技術情報の自動収集（コードベース検索、Web検索）
 3. ユーザーへのヒアリング（選択肢ベース）
