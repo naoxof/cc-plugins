@@ -14,14 +14,22 @@ Communicate in the language your user use.
 
 1. **Read the file** — File specified in `$ARGUMENTS` (ask user if not specified).
 2. **List all `<CLAUDE>` placeholders** — Report total count and brief summary of each.
-3. **Process each placeholder from top to bottom**:
+3. **Process ONE placeholder at a time from top to bottom**:
    a. Analyze surrounding context to understand what's needed.
    b. Gather technical information yourself (read files, search code, etc.).
-   c. **Use `AskUserQuestion`** to interview for information only the user can provide.
+   c. **REQUIRED: Use `AskUserQuestion`** to interview the user. **NEVER skip this step or make assumptions.**
    d. Draft content based on user answers and your research.
-   e. Replace the `<CLAUDE>` marker and write to file.
-   f. Show the user what you wrote and report progress.
+   e. **IMMEDIATELY write to file** — Replace ONLY this one `<CLAUDE>` marker.
+   f. Show the user what you wrote and report progress (e.g., "✅ Filled <CLAUDE> #1 (1/5 complete)").
+   g. **Move to the next placeholder** — Return to step 3a for the next placeholder.
 4. **Verify** — Re-read file to confirm no `<CLAUDE>` markers remain.
+
+## Critical Processing Rules
+
+- **ONE at a time** — Never process multiple `<CLAUDE>` placeholders simultaneously.
+- **Always interview first** — MUST use `AskUserQuestion` for every single placeholder. Guessing or inferring content is prohibited.
+- **Write immediately after each** — Save the filled content to file before moving to the next placeholder.
+- **Sequential cycle** — Complete the full cycle (interview → draft → write → report) for one placeholder before starting the next.
 
 ## AskUserQuestion Rules (Required)
 
