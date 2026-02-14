@@ -1,6 +1,6 @@
 ---
-name: template-creator
-description: "template-filler向けのテンプレート付きドキュメントを作成。ユーザーの要件をヒアリングし、<CLAUDE>プレースホルダーを適切に配置したテンプレートファイルを生成する。"
+name: creator
+description: "filler Skill向けのテンプレート付きドキュメントを作成。ユーザーの要件をヒアリングし、<CLAUDE>プレースホルダーを適切に配置したテンプレートファイルを生成する。"
 argument-hint: "[ファイルパス]"
 ---
 

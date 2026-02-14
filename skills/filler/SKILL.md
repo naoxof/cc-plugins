@@ -1,5 +1,5 @@
 ---
-name: template-filler
+name: filler
 description: "ユーザーがテキストファイル内の <CLAUDE> プレースホルダーを埋めたいときに使用。ファイルを読み込み、プレースホルダーを特定し、AskUserQuestion でヒアリング型の質問をしてコンテキストを収集した後、内容を起草して書き込む。"
 argument-hint: "[ファイルパス]"
 ---
