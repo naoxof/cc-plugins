@@ -1,0 +1,13 @@
+{
+  "name": "naoxof",
+  "owner": {
+    "name": "naoxof"
+  },
+  "plugins": [
+    {
+      "name": "templt",
+      "source": "./tmplt",
+      "description": "Template based documet creator"
+    }
+  ]
+}
